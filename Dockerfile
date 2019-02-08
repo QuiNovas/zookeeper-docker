@@ -1,4 +1,5 @@
 FROM openjdk:8-jre-alpine
+LABEL maintainer="Mathew Moon <mmoon@quinovas.com>"
 
 # Install required packages
 RUN apk add --no-cache \
