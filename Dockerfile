@@ -39,6 +39,7 @@ COPY zkServer.sh /zookeeper/bin/zkServer.sh
 COPY prometheus.yml /etc/prometheus/config.yml
 COPY zoo.cfg /conf/zoo.cfg
 COPY log4j.properties /conf/log4j.properties
+COPY ensemble.cfg /conf/ensemble.cfg
 
 RUN chmod +x /zookeeper/bin/zkServer.sh
 
