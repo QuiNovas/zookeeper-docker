@@ -58,8 +58,11 @@ if [ -z ${WITHOUT_PROMETHEUS} ]; then
 fi
 
 ZOO_CMD=$JAVA_HOME/bin/java
-#ZOO_CMD=$(which java)
 MEMORY_OPTS='-XX:+CrashOnOutOfMemoryError'
+
+[ ! -z "${ASYNC_HOOK}" ] && [ -x "${ASYNC_HOOK}" ] && ${ASYNC_HOOK} 2>&1 &
+
+[ ! -z "${PREHOOK}" ] && [ -x "${PREHOOK}" ] && ${PREHOOK}
 
 CMD=$(cat<<EOF
   ${ZOO_CMD} \
