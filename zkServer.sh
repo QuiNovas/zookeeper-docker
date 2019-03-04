@@ -2,7 +2,7 @@
 
 ZOOCFG="/conf/zoo.cfg"
 
-ZOO_DATADIR=/data
+[ -z "$ZOO_DATADIR" ] && ZOO_DATADIR=/data
 
 ZOOBINDIR="$( cd "$(dirname "$0")" ; pwd -P )"
 export PATH=$PATH:/zookeeper/bin
@@ -36,19 +36,14 @@ CLASSPATH="$ZOOBINDIR/../build/classes:$CLASSPATH:/conf/"
 ZOOMAIN="org.apache.zookeeper.server.quorum.QuorumPeerMain"
 
 # default heap for zookeeper server
-ZK_SERVER_HEAP="${ZK_SERVER_HEAP:-1000}"
-SERVER_JVMFLAGS="-Xmx${ZK_SERVER_HEAP}m $SERVER_JVMFLAGS"
+[ -z "${ZK_SERVER_HEAP}" ] && ZK_SERVER_HEAP=256
+SERVER_JVMFLAGS="-Xmx${ZK_SERVER_HEAP}m $JVMFLAGS"
 
 
-if [ -z "$ZOOPIDFILE" ]; then
-    if [ ! -d "$ZOO_DATADIR" ]; then
-        mkdir -p "$ZOO_DATADIR"
-    fi
-    ZOOPIDFILE="$ZOO_DATADIR/zookeeper_server.pid"
-else
-    # ensure it xists, otw stop will fail
-    mkdir -p "$(dirname "$ZOOPIDFILE")"
-fi
+# make the data dir if it doesn't exist
+[ -d "$ZOO_DATADIR" ] || mkdir -p "$ZOO_DATADIR"
+
+ZOOPIDFILE="$ZOO_DATADIR/zookeeper_server.pid"
 
 [ -z $PROMETHEUS_PORT ] && PROMETHEUS_PORT=7070
 PROMETHEUS_CMD=""
@@ -69,7 +64,7 @@ CMD=$(cat<<EOF
   ${MEMORY_OPTS} \
   ${PROMETHEUS_CMD} \
   ${ZOO_EXTRA_ARGS} \
-  -cp $CLASSPATH $JVMFLAGS $ZOOMAIN $ZOOCFG
+  -cp $CLASSPATH $SERVER_JVMFLAGS $ZOOMAIN $ZOOCFG
 EOF
 );
 
