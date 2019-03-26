@@ -44,4 +44,7 @@ COPY client /zookeeper/bin/zk-client
 RUN chmod +x /zookeeper/bin/zk-client
 RUN chmod +x /zookeeper/bin/zookeeper
 RUN chown -R zookeeper:zookeeper /logs /datalog /conf /data /zookeeper
+
+ENV PATH=$PATH:/zookeeper/bin
+
 CMD ["/zookeeper/bin/zookeeper"]
