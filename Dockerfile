@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk11:x86_64-alpine-jre-11.0.2.9
 LABEL maintainer="Mathew Moon <mmoon@quinovas.com>"
 
 # Install required packages
@@ -35,13 +35,13 @@ RUN wget -qO /usr/local/bin/prometheus_agent.jar https://repo1.maven.org/maven2/
 
 WORKDIR /zookeeper
 
-COPY zkServer.sh /zookeeper/bin/zkServer.sh
+COPY zookeeper /zookeeper/bin/zookeeper
 COPY prometheus.yml /etc/prometheus/config.yml
 COPY zoo.cfg /conf/zoo.cfg
 COPY log4j.properties /conf/log4j.properties
 COPY ensemble.cfg /conf/ensemble.cfg
-COPY client.sh /zookeeper/bin/client.sh
-RUN chmod +x /zookeeper/bin/client.sh
-RUN chmod +x /zookeeper/bin/zkServer.sh
+COPY client /zookeeper/bin/zk-client
+RUN chmod +x /zookeeper/bin/zk-client
+RUN chmod +x /zookeeper/bin/zookeeper
 RUN chown -R zookeeper:zookeeper /logs /datalog /conf /data /zookeeper
-CMD ["/zookeeper/bin/zkServer.sh"]
+CMD ["/zookeeper/bin/zookeeper"]
